@@ -1,34 +1,33 @@
 (ns mecca.tuna.app
-  (:require [goog.dom :as gdom]
-            [reagent.core :as r]))
+  (:require
+   [reagent.core :as r]
+   [promesa.core :as p]))
+
+(defn initialize-audio []
+  (let [ctx      (js/window.AudioContext.)
+        analyser (.createAnalyser ctx)]
+    (-> (.getUserMedia (.-mediaDevices js/navigator) (clj->js {:audio true}))
+        (p/chain
+         (fn [stream]
+           (.createMediaStreamSource ctx stream))
+         (fn [mss]
+           (.connect mss analyser))))))
 
 (defn mecca []
   [:div
-   [:h1 "mecca-tuna"]
-   ])
+   [:h1 "mecca-tuna"]])
 
-(defn get-app-element []
-  (gdom/getElement "root"))
+(defn render []
+  (r/render [mecca]
+            (.getElementById js/document "root")))
 
-(defn mount [el]
-  (r/render-component [mecca] el))
-
-(defn mount-app-element []
-  (when-let [el (get-app-element)]
-    (mount el)))
-
-;; start is called by init and after code reloading finishes
 (defn ^:dev/after-load start []
-  (mount-app-element)
+  (render)
   (js/console.log "start"))
 
 (defn ^:export init []
-  ;; init is called ONCE when the page loads
-  ;; this is called in the index.html and must be exported
-  ;; so it is available even in :advanced release builds
   (js/console.log "init")
   (start))
 
-;; this is called before any code is reloaded
 (defn ^:dev/before-load stop []
   (js/console.log "stop"))
