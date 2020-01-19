@@ -1,5 +1,5 @@
 {:builds       {:app {:asset-path "/js"
-                      :modules    {:main {:init-fn voice-change-o-matic.main/init}}
+                      :modules    {:main {:init-fn mecca-tuna.main/init}}
                       :output-dir "public/js"
                       :target     :browser}}
  :dependencies [[reagent "0.8.1"]]
