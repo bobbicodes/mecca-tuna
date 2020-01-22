@@ -3,7 +3,8 @@
 
 (defn app []
   [:div 
-   [:h1 "hi"]])
+   ;[:h1 "hi"]
+   ])
 
 (defn ^:dev/after-load start []
   (r/render [app]
